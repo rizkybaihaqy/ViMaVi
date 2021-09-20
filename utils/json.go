@@ -13,8 +13,11 @@ func WriteJSON(w http.ResponseWriter, status int, data interface{}, isSuccess bo
 	res := make(map[string]interface{})
 
 	res["ok"] = isSuccess
-	res["data"] = data
 	res["message"] = msg
+
+	if data != nil {
+		res["data"] = data
+	}
 
 	js, err := json.Marshal(res)
 	if err != nil {
