@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"database/sql"
+	"encoding/json"
 	"log"
 	"net/http"
 	"strconv"
@@ -30,4 +31,21 @@ func GetVip(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.WriteJSON(w, http.StatusOK, vip, true, utils.SuccessRetriveMessage)
+}
+
+// Create one vip from post request
+func CreateVip(w http.ResponseWriter, r *http.Request) {
+	var vip models.Vip
+
+	err := json.NewDecoder(r.Body).Decode(&vip)
+	if err != nil {
+		log.Fatalf("Unable to decode the request body.  %v", err)
+	}
+
+	err = models.InsertVip(vip)
+	if err != nil {
+		log.Fatalf("Unable to execute the query. %v", err)
+	}
+
+	utils.WriteJSON(w, http.StatusCreated, nil, true, utils.SuccessCreateMessage)
 }

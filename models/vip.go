@@ -42,3 +42,33 @@ func GetVip(id int64) (Vip, error) {
 
 	return vip, err
 }
+
+// Insert one vip to database
+func InsertVip(vip Vip) error {
+	db := config.CreateConnection()
+	defer db.Close()
+
+	query := `INSERT INTO
+					vips (name, country_of_origin, eta, photo, arrived, attributes)
+				VALUES ($1, $2, $3, $4, $5, $6)
+				RETURNING id`
+
+	var id int64
+
+	row := db.QueryRow(
+		query,
+		vip.Name,
+		vip.CountryOfOrigin,
+		vip.ETA,
+		vip.Photo,
+		vip.Arrived,
+		pq.Array(vip.Attributes),
+	)
+
+	err := row.Scan(&id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
