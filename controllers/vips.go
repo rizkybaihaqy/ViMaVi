@@ -12,6 +12,20 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// Get all vips
+func GetVips(w http.ResponseWriter, r *http.Request) {
+	vips, err := models.GetVips()
+	if vips == nil {
+		utils.WriteJSON(w, http.StatusNotFound, nil, true, utils.NotFoundMessage)
+		return
+	}
+	if err != nil {
+		log.Fatalf("Unable to get all vips. %v", err)
+	}
+
+	utils.WriteJSON(w, http.StatusOK, vips, true, utils.SuccessRetriveMessage)
+}
+
 // Get one vip by id.
 func GetVip(w http.ResponseWriter, r *http.Request) {
 	p := mux.Vars(r)

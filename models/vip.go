@@ -17,6 +17,43 @@ type Vip struct {
 	Attributes      []string `json:"attributes"`
 }
 
+func GetVips() ([]Vip, error) {
+	db := config.CreateConnection()
+	defer db.Close()
+
+	var vips []Vip
+
+	query := `SELECT id, name, country_of_origin, eta, photo, arrived, attributes FROM vips`
+
+	rows, err := db.Query(query)
+	if err != nil {
+		return vips, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var vip Vip
+
+		err = rows.Scan(
+			&vip.ID,
+			&vip.Name,
+			&vip.CountryOfOrigin,
+			&vip.ETA,
+			&vip.Photo,
+			&vip.Arrived,
+			pq.Array(&vip.Attributes),
+		)
+		if err != nil {
+			return vips, err
+		}
+
+		vips = append(vips, vip)
+	}
+
+	return vips, nil
+}
+
 // Get vip data by id from database
 func GetVip(id int64) (Vip, error) {
 	db := config.CreateConnection()
