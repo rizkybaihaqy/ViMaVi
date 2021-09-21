@@ -2,7 +2,7 @@ package routers
 
 import (
 	"net/http"
-	"vip-management-system-api/controllers"
+	c "vip-management-system-api/controllers"
 
 	"github.com/gorilla/mux"
 )
@@ -10,11 +10,11 @@ import (
 func Router() *mux.Router {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/api/vips/{id}", controllers.GetVip).Methods(http.MethodGet)
-	r.HandleFunc("/api/vips", controllers.GetVips).Methods(http.MethodGet)
-	r.HandleFunc("/api/vips", controllers.CreateVip).Methods(http.MethodPost)
-	r.HandleFunc("/api/vips/{id}", controllers.UpdateVip).Methods(http.MethodPut)
-	r.HandleFunc("/api/vips/{id}", controllers.DeleteVip).Methods(http.MethodDelete)
+	r.HandleFunc("/api/vips/{id}", c.GetVip).Methods(http.MethodGet)
+	r.HandleFunc("/api/vips", c.GetVips).Methods(http.MethodGet)
+	r.HandleFunc("/api/vips", c.CreateVip).Methods(http.MethodPost)
+	r.HandleFunc("/api/vips/{id}", c.UpdateVip).Methods(http.MethodPut)
+	r.HandleFunc("/api/vips/{id}", c.DeleteVip).Methods(http.MethodDelete)
 
 	return r
 }
