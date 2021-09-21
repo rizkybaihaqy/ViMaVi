@@ -140,3 +140,23 @@ func UpdateVip(id int64, v Vip) (int64, error) {
 
 	return rAffected, nil
 }
+
+// Delete one from database
+func DeleteVip(id int64) (int64, error) {
+	db := config.CreateConnection()
+	defer db.Close()
+
+	sqlStatement := `DELETE FROM vips WHERE id=$1`
+
+	res, err := db.Exec(sqlStatement, id)
+	if err != nil {
+		return 0, err
+	}
+
+	rAffected, err := res.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+
+	return rAffected, nil
+}

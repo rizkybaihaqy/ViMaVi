@@ -91,3 +91,24 @@ func UpdateVip(w http.ResponseWriter, r *http.Request) {
 
 	utils.WriteJSON(w, http.StatusCreated, nil, true, utils.SuccessUpdateMessage)
 }
+
+// Delete one vip
+func DeleteVip(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+
+	id, err := strconv.Atoi(params["id"])
+	if err != nil {
+		log.Fatalf("Unable to convert the string into int.  %v", err)
+	}
+
+	row, err := models.DeleteVip(int64(id))
+	if err != nil {
+		log.Fatalf("Unable to execute the query. %v", err)
+	}
+	if row == 0 {
+		utils.WriteJSON(w, http.StatusCreated, nil, true, utils.NotFoundMessage)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusCreated, nil, true, utils.SuccessUpdateMessage)
+}
