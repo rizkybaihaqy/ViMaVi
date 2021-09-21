@@ -22,13 +22,13 @@ func GetVips() ([]Vip, error) {
 	db := config.CreateConnection()
 	defer db.Close()
 
-	var vips []Vip
+	var v []Vip
 
-	query := `SELECT id, name, country_of_origin, eta, photo, arrived, attributes FROM vips`
+	q := `SELECT id, name, country_of_origin, eta, photo, arrived, attributes FROM vips`
 
-	rows, err := db.Query(query)
+	rows, err := db.Query(q)
 	if err != nil {
-		return vips, err
+		return v, err
 	}
 
 	defer rows.Close()
@@ -46,13 +46,13 @@ func GetVips() ([]Vip, error) {
 			pq.Array(&vip.Attributes),
 		)
 		if err != nil {
-			return vips, err
+			return v, err
 		}
 
-		vips = append(vips, vip)
+		v = append(v, vip)
 	}
 
-	return vips, nil
+	return v, nil
 }
 
 // Get vip data by id from database
@@ -60,29 +60,29 @@ func GetVip(id int64) (Vip, error) {
 	db := config.CreateConnection()
 	defer db.Close()
 
-	var vip Vip
+	var v Vip
 
 	query := `SELECT id, name, country_of_origin, eta, photo, arrived, attributes FROM vips WHERE id = $1`
 	row := db.QueryRow(query, id)
 
 	err := row.Scan(
-		&vip.ID,
-		&vip.Name,
-		&vip.CountryOfOrigin,
-		&vip.ETA,
-		&vip.Photo,
-		&vip.Arrived,
-		pq.Array(&vip.Attributes),
+		&v.ID,
+		&v.Name,
+		&v.CountryOfOrigin,
+		&v.ETA,
+		&v.Photo,
+		&v.Arrived,
+		pq.Array(&v.Attributes),
 	)
 	if err != nil {
-		return vip, err
+		return v, err
 	}
 
-	return vip, err
+	return v, err
 }
 
 // Insert one vip to database
-func InsertVip(vip Vip) error {
+func InsertVip(v Vip) error {
 	db := config.CreateConnection()
 	defer db.Close()
 
@@ -95,12 +95,12 @@ func InsertVip(vip Vip) error {
 
 	row := db.QueryRow(
 		query,
-		vip.Name,
-		vip.CountryOfOrigin,
-		vip.ETA,
-		vip.Photo,
-		vip.Arrived,
-		pq.Array(vip.Attributes),
+		v.Name,
+		v.CountryOfOrigin,
+		v.ETA,
+		v.Photo,
+		v.Arrived,
+		pq.Array(v.Attributes),
 	)
 
 	err := row.Scan(&id)

@@ -14,8 +14,8 @@ import (
 
 // Get all vips
 func GetVips(w http.ResponseWriter, r *http.Request) {
-	vips, err := models.GetVips()
-	if vips == nil {
+	v, err := models.GetVips()
+	if v == nil {
 		utils.WriteJSON(w, http.StatusNotFound, nil, true, utils.NotFoundMessage)
 		return
 	}
@@ -23,7 +23,7 @@ func GetVips(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to get all vips. %v", err)
 	}
 
-	utils.WriteJSON(w, http.StatusOK, vips, true, utils.SuccessRetriveMessage)
+	utils.WriteJSON(w, http.StatusOK, v, true, utils.SuccessRetriveMessage)
 }
 
 // Get one vip by id.
@@ -35,7 +35,7 @@ func GetVip(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to convert the string into int.  %v", err)
 	}
 
-	vip, err := models.GetVip(int64(id))
+	v, err := models.GetVip(int64(id))
 	if err == sql.ErrNoRows {
 		utils.WriteJSON(w, http.StatusNotFound, nil, true, utils.NotFoundMessage)
 		return
@@ -44,19 +44,19 @@ func GetVip(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to get vip. %v", err)
 	}
 
-	utils.WriteJSON(w, http.StatusOK, vip, true, utils.SuccessRetriveMessage)
+	utils.WriteJSON(w, http.StatusOK, v, true, utils.SuccessRetriveMessage)
 }
 
 // Create one vip from post request
 func CreateVip(w http.ResponseWriter, r *http.Request) {
-	var vip models.Vip
+	var v models.Vip
 
-	err := json.NewDecoder(r.Body).Decode(&vip)
+	err := json.NewDecoder(r.Body).Decode(&v)
 	if err != nil {
 		log.Fatalf("Unable to decode the request body.  %v", err)
 	}
 
-	err = models.InsertVip(vip)
+	err = models.InsertVip(v)
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v", err)
 	}
