@@ -7,6 +7,7 @@ import (
 
 const SuccessRetriveMessage = "Successfully retrieve data"
 const SuccessCreateMessage = "Successfully create data"
+const SuccessUpdateMessage = "Successfully update data"
 const NotFoundMessage = "No data found"
 
 // Construct json response. Takes writer, http.status, response data if any, success status, and some message

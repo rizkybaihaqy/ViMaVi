@@ -63,3 +63,28 @@ func CreateVip(w http.ResponseWriter, r *http.Request) {
 
 	utils.WriteJSON(w, http.StatusCreated, nil, true, utils.SuccessCreateMessage)
 }
+
+// Update one vip from post request
+func UpdateVip(w http.ResponseWriter, r *http.Request) {
+	p := mux.Vars(r)
+
+	id, err := strconv.Atoi(p["id"])
+	if err != nil {
+		log.Fatalf("Unable to convert the string into int.  %v", err)
+	}
+
+	var v models.Vip
+
+	err = json.NewDecoder(r.Body).Decode(&v)
+	if err != nil {
+		log.Fatalf("Unable to decode the request body.  %v", err)
+	}
+
+	row := models.UpdateVip(int64(id), v)
+	if row == 0 {
+		utils.WriteJSON(w, http.StatusCreated, nil, true, utils.NotFoundMessage)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusCreated, nil, true, utils.SuccessUpdateMessage)
+}

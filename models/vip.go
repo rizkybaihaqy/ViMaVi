@@ -1,6 +1,7 @@
 package models
 
 import (
+	"log"
 	"vip-management-system-api/config"
 
 	"github.com/lib/pq"
@@ -108,4 +109,35 @@ func InsertVip(vip Vip) error {
 	}
 
 	return nil
+}
+
+// Update one vip from database, returning affected rows
+func UpdateVip(id int64, v Vip) int64 {
+	db := config.CreateConnection()
+	defer db.Close()
+
+	q := `UPDATE vips
+			SET name=$2, country_of_origin=$3, eta=$4, photo=$5, arrived=$6, attributes=$7
+			WHERE id=$1`
+
+	row, err := db.Exec(
+		q,
+		id,
+		v.Name,
+		v.CountryOfOrigin,
+		v.ETA,
+		v.Photo,
+		v.Arrived,
+		pq.Array(v.Attributes),
+	)
+	if err != nil {
+		log.Fatalf("Unable to execute the query. %v", err)
+	}
+
+	rAffected, err := row.RowsAffected()
+	if err != nil {
+		log.Fatalf("Error while checking the affected rows. %v", err)
+	}
+
+	return rAffected
 }

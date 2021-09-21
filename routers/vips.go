@@ -13,6 +13,7 @@ func Router() *mux.Router {
 	r.HandleFunc("/api/vips/{id}", controllers.GetVip).Methods(http.MethodGet)
 	r.HandleFunc("/api/vips", controllers.GetVips).Methods(http.MethodGet)
 	r.HandleFunc("/api/vips", controllers.CreateVip).Methods(http.MethodPost)
+	r.HandleFunc("/api/vips/{id}", controllers.UpdateVip).Methods(http.MethodPut)
 
 	return r
 }
