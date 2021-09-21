@@ -80,7 +80,10 @@ func UpdateVip(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to decode the request body.  %v", err)
 	}
 
-	row := models.UpdateVip(int64(id), v)
+	row, err := models.UpdateVip(int64(id), v)
+	if err != nil {
+		log.Fatalf("Unable to execute the query. %v", err)
+	}
 	if row == 0 {
 		utils.WriteJSON(w, http.StatusCreated, nil, true, utils.NotFoundMessage)
 		return
