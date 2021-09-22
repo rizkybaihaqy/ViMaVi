@@ -13,16 +13,16 @@ import (
 )
 
 type VipController struct {
-	vModel *models.VipModel
+	VM *models.VipModel
 }
 
-func NewVipController(vModel *models.VipModel) *VipController {
-	return &VipController{vModel: vModel}
+func NewVipController(vm *models.VipModel) *VipController {
+	return &VipController{VM: vm}
 }
 
 // Get all vips
 func (c VipController) GetVips(w http.ResponseWriter, r *http.Request) {
-	v, err := c.vModel.GetVips()
+	v, err := c.VM.GetVips()
 	if v == nil {
 		utils.WriteJSON(w, http.StatusNotFound, nil, true, utils.NotFoundMessage)
 		return
@@ -43,7 +43,7 @@ func (c VipController) GetVip(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to convert the string into int.  %v", err)
 	}
 
-	v, err := c.vModel.GetVip(int64(id))
+	v, err := c.VM.GetVip(int64(id))
 	if err == sql.ErrNoRows {
 		utils.WriteJSON(w, http.StatusNotFound, nil, true, utils.NotFoundMessage)
 		return
@@ -64,7 +64,7 @@ func (c VipController) CreateVip(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to decode the request body.  %v", err)
 	}
 
-	err = c.vModel.InsertVip(v)
+	err = c.VM.InsertVip(v)
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v", err)
 	}
@@ -88,7 +88,7 @@ func (c VipController) UpdateVip(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to decode the request body.  %v", err)
 	}
 
-	row, err := c.vModel.UpdateVip(int64(id), v)
+	row, err := c.VM.UpdateVip(int64(id), v)
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v", err)
 	}
@@ -109,7 +109,7 @@ func (c VipController) DeleteVip(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to convert the string into int.  %v", err)
 	}
 
-	row, err := c.vModel.DeleteVip(int64(id))
+	row, err := c.VM.DeleteVip(int64(id))
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v", err)
 	}

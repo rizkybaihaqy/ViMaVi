@@ -28,11 +28,11 @@ func NewServer(cfg *config.Config, db *sql.DB) *Server {
 }
 
 func (s *Server) Run() error {
-	vModel := models.NewVipModel(s.DB)
-	vController := controllers.NewVipController(vModel)
-	vRoutes := routers.NewVipRoutes(vController)
+	vm := models.NewVipModel(s.DB)
+	vc := controllers.NewVipController(vm)
+	vr := routers.NewVipRoutes(vc)
 
-	r := vRoutes.Router()
+	r := vr.Router()
 	h := handlers.AllowedHeaders([]string{"Content-Type"})
 	m := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"})
 	o := handlers.AllowedOrigins([]string{"*"})
