@@ -1,7 +1,7 @@
 package models
 
 import (
-	"vip-management-system-api/config"
+	"database/sql"
 
 	"github.com/lib/pq"
 )
@@ -17,15 +17,20 @@ type Vip struct {
 	Attributes      []string `json:"attributes"`
 }
 
-func GetVips() ([]Vip, error) {
-	db := config.CreateConnection()
-	defer db.Close()
+type VipModel struct {
+	DB *sql.DB
+}
 
+func NewVipModel(db *sql.DB) *VipModel {
+	return &VipModel{DB: db}
+}
+
+func (m VipModel) GetVips() ([]Vip, error) {
 	var v []Vip
 
 	q := `SELECT id, name, country_of_origin, eta, photo, arrived, attributes FROM vips`
 
-	rows, err := db.Query(q)
+	rows, err := m.DB.Query(q)
 	if err != nil {
 		return v, err
 	}
@@ -55,14 +60,11 @@ func GetVips() ([]Vip, error) {
 }
 
 // Get vip data by id from database
-func GetVip(id int64) (Vip, error) {
-	db := config.CreateConnection()
-	defer db.Close()
-
+func (m VipModel) GetVip(id int64) (Vip, error) {
 	var v Vip
 
 	query := `SELECT id, name, country_of_origin, eta, photo, arrived, attributes FROM vips WHERE id = $1`
-	row := db.QueryRow(query, id)
+	row := m.DB.QueryRow(query, id)
 
 	err := row.Scan(
 		&v.ID,
@@ -81,10 +83,7 @@ func GetVip(id int64) (Vip, error) {
 }
 
 // Insert one vip to database
-func InsertVip(v Vip) error {
-	db := config.CreateConnection()
-	defer db.Close()
-
+func (m VipModel) InsertVip(v Vip) error {
 	query := `INSERT INTO
 					vips (name, country_of_origin, eta, photo, arrived, attributes)
 				VALUES ($1, $2, $3, $4, $5, $6)
@@ -92,7 +91,7 @@ func InsertVip(v Vip) error {
 
 	var id int64
 
-	row := db.QueryRow(
+	row := m.DB.QueryRow(
 		query,
 		v.Name,
 		v.CountryOfOrigin,
@@ -111,15 +110,12 @@ func InsertVip(v Vip) error {
 }
 
 // Update one vip from database, returning affected rows
-func UpdateVip(id int64, v Vip) (int64, error) {
-	db := config.CreateConnection()
-	defer db.Close()
-
+func (m VipModel) UpdateVip(id int64, v Vip) (int64, error) {
 	q := `UPDATE vips
 			SET name=$2, country_of_origin=$3, eta=$4, photo=$5, arrived=$6, attributes=$7
 			WHERE id=$1`
 
-	row, err := db.Exec(
+	row, err := m.DB.Exec(
 		q,
 		id,
 		v.Name,
@@ -142,13 +138,10 @@ func UpdateVip(id int64, v Vip) (int64, error) {
 }
 
 // Delete one from database
-func DeleteVip(id int64) (int64, error) {
-	db := config.CreateConnection()
-	defer db.Close()
-
+func (m VipModel) DeleteVip(id int64) (int64, error) {
 	sqlStatement := `DELETE FROM vips WHERE id=$1`
 
-	res, err := db.Exec(sqlStatement, id)
+	res, err := m.DB.Exec(sqlStatement, id)
 	if err != nil {
 		return 0, err
 	}

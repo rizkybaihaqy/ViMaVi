@@ -1,28 +1,23 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"net/http"
-	"os"
 
-	"vip-management-system-api/routers"
-
-	"github.com/gorilla/handlers"
-	"github.com/joho/godotenv"
+	"vip-management-system-api/config"
+	"vip-management-system-api/server"
 )
 
 func main() {
-	err := godotenv.Load(".env")
+	cfg := config.LoadConfig()
+
+	db, err := config.CreateConnection(cfg.PgUrl)
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		panic(err)
 	}
+	defer db.Close()
 
-	r := routers.Router()
-	h := handlers.AllowedHeaders([]string{"Content-Type"})
-	m := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"})
-	o := handlers.AllowedOrigins([]string{"*"})
-
-	fmt.Println("Starting server on the port", os.Getenv("PORT"))
-	log.Fatal(http.ListenAndServe(os.Getenv("PORT"), handlers.CORS(h, m, o)(r)))
+	s := server.NewServer(cfg, db)
+	if err := s.Run(); err != nil {
+		log.Fatal(err)
+	}
 }
