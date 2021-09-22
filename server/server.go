@@ -14,12 +14,12 @@ import (
 	"github.com/gorilla/handlers"
 )
 
-// Server struct
 type Server struct {
 	Config *config.Config
 	DB     *sql.DB
 }
 
+// Server struct constructor
 func NewServer(cfg *config.Config, db *sql.DB) *Server {
 	return &Server{
 		Config: cfg,
@@ -27,6 +27,7 @@ func NewServer(cfg *config.Config, db *sql.DB) *Server {
 	}
 }
 
+// Run the server and init other internal packages
 func (s *Server) Run() error {
 	vm := models.NewVipModel(s.DB)
 	vc := controllers.NewVipController(vm)

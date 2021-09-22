@@ -6,7 +6,7 @@ import (
 	"github.com/lib/pq"
 )
 
-// Vip data type
+// Vip model type
 type Vip struct {
 	ID              int64    `json:"id"`
 	Name            string   `json:"name"`
@@ -21,10 +21,12 @@ type VipModel struct {
 	DB *sql.DB
 }
 
+// VipModel struct constructor
 func NewVipModel(db *sql.DB) *VipModel {
 	return &VipModel{DB: db}
 }
 
+// Get all vip
 func (m VipModel) GetVips() ([]Vip, error) {
 	var v []Vip
 
@@ -154,6 +156,7 @@ func (m VipModel) DeleteVip(id int64) (int64, error) {
 	return rAffected, nil
 }
 
+// Update one vip arrived status to true
 func (m VipModel) ArrivedVip(id int64) (int64, error) {
 	q := `UPDATE vips SET arrived=$2 WHERE id=$1`
 

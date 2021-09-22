@@ -12,6 +12,7 @@ type VipRoutes struct {
 	VC *controllers.VipController
 }
 
+// VipRoutes struct constructor
 func NewVipRoutes(vc *controllers.VipController) *VipRoutes {
 	return &VipRoutes{VC: vc}
 }

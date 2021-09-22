@@ -11,7 +11,8 @@ const SuccessUpdateMessage = "Successfully update data"
 const SuccessDeleteMessage = "Successfully delete data"
 const NotFoundMessage = "No data found"
 
-// Construct json response. Takes writer, http.status, response data if any, success status, and some message
+// Construct json response. Takes writer, http.status, response data if any, success status, and some message.
+// Tips. try the constant msg
 func WriteJSON(w http.ResponseWriter, status int, data interface{}, isSuccess bool, msg string) error {
 	res := make(map[string]interface{})
 

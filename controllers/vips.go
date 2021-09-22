@@ -17,6 +17,7 @@ type VipController struct {
 	VM *models.VipModel
 }
 
+// VipController struct constructor
 func NewVipController(vm *models.VipModel) *VipController {
 	return &VipController{VM: vm}
 }
