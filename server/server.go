@@ -35,7 +35,7 @@ func (s *Server) Run() error {
 
 	r := vr.Router()
 	h := handlers.AllowedHeaders([]string{"Content-Type"})
-	m := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"})
+	m := handlers.AllowedMethods([]string{http.MethodGet, http.MethodPost, http.MethodPost, http.MethodPost, http.MethodPatch})
 	o := handlers.AllowedOrigins([]string{"*"})
 
 	fmt.Println("Starting server on the port", s.Config.Port)
