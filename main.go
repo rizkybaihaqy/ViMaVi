@@ -7,10 +7,12 @@ import (
 )
 
 func main() {
-	db := config.CreateConnection()
+	cfg := config.LoadConfig()
+
+	db := config.CreateConnection(cfg.PgUrl)
 	defer db.Close()
 
-	s := server.NewServer(db)
+	s := server.NewServer(cfg, db)
 	if err := s.Run(); err != nil {
 		log.Fatal(err)
 	}

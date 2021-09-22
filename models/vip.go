@@ -2,7 +2,6 @@ package models
 
 import (
 	"database/sql"
-	"vip-management-system-api/config"
 
 	"github.com/lib/pq"
 )
@@ -140,12 +139,9 @@ func (m VipModel) UpdateVip(id int64, v Vip) (int64, error) {
 
 // Delete one from database
 func (m VipModel) DeleteVip(id int64) (int64, error) {
-	db := config.CreateConnection()
-	defer db.Close()
-
 	sqlStatement := `DELETE FROM vips WHERE id=$1`
 
-	res, err := db.Exec(sqlStatement, id)
+	res, err := m.db.Exec(sqlStatement, id)
 	if err != nil {
 		return 0, err
 	}
