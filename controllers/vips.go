@@ -121,3 +121,24 @@ func (c VipController) DeleteVip(w http.ResponseWriter, r *http.Request) {
 
 	utils.WriteJSON(w, http.StatusCreated, nil, true, utils.SuccessUpdateMessage)
 }
+
+// Update one vip arrived status to true from put request
+func (c VipController) ArrivedVip(w http.ResponseWriter, r *http.Request) {
+	p := mux.Vars(r)
+
+	id, err := strconv.Atoi(p["id"])
+	if err != nil {
+		log.Fatalf("Unable to convert the string into int.  %v", err)
+	}
+
+	row, err := c.VM.ArrivedVip(int64(id))
+	if err != nil {
+		log.Fatalf("Unable to execute the query. %v", err)
+	}
+	if row == 0 {
+		utils.WriteJSON(w, http.StatusNotFound, nil, true, utils.NotFoundMessage)
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, nil, true, utils.SuccessUpdateMessage)
+}

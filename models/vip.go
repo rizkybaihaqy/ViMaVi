@@ -153,3 +153,19 @@ func (m VipModel) DeleteVip(id int64) (int64, error) {
 
 	return rAffected, nil
 }
+
+func (m VipModel) ArrivedVip(id int64) (int64, error) {
+	q := `UPDATE vips SET arrived=$2 WHERE id=$1`
+
+	row, err := m.DB.Exec(q, id, true)
+	if err != nil {
+		return 0, err
+	}
+
+	rAffected, err := row.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+
+	return rAffected, nil
+}

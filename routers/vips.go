@@ -24,6 +24,7 @@ func (vr VipRoutes) Router() *mux.Router {
 	r.HandleFunc("/api/vips", vr.VC.CreateVip).Methods(http.MethodPost)
 	r.HandleFunc("/api/vips/{id}", vr.VC.UpdateVip).Methods(http.MethodPut)
 	r.HandleFunc("/api/vips/{id}", vr.VC.DeleteVip).Methods(http.MethodDelete)
+	r.HandleFunc("/api/vips/{id}", vr.VC.ArrivedVip).Methods(http.MethodPatch)
 
 	return r
 }
