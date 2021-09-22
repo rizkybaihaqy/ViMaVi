@@ -17,18 +17,18 @@ import (
 // Server struct
 type Server struct {
 	Config *config.Config
-	db     *sql.DB
+	DB     *sql.DB
 }
 
 func NewServer(cfg *config.Config, db *sql.DB) *Server {
 	return &Server{
 		Config: cfg,
-		db:     db,
+		DB:     db,
 	}
 }
 
 func (s *Server) Run() error {
-	vModel := models.NewVipModel(s.db)
+	vModel := models.NewVipModel(s.DB)
 	vController := controllers.NewVipController(vModel)
 	vRoutes := routers.NewVipRoutes(vController)
 

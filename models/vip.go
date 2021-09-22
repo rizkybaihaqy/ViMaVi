@@ -18,11 +18,11 @@ type Vip struct {
 }
 
 type VipModel struct {
-	db *sql.DB
+	DB *sql.DB
 }
 
 func NewVipModel(db *sql.DB) *VipModel {
-	return &VipModel{db: db}
+	return &VipModel{DB: db}
 }
 
 func (m VipModel) GetVips() ([]Vip, error) {
@@ -30,7 +30,7 @@ func (m VipModel) GetVips() ([]Vip, error) {
 
 	q := `SELECT id, name, country_of_origin, eta, photo, arrived, attributes FROM vips`
 
-	rows, err := m.db.Query(q)
+	rows, err := m.DB.Query(q)
 	if err != nil {
 		return v, err
 	}
@@ -64,7 +64,7 @@ func (m VipModel) GetVip(id int64) (Vip, error) {
 	var v Vip
 
 	query := `SELECT id, name, country_of_origin, eta, photo, arrived, attributes FROM vips WHERE id = $1`
-	row := m.db.QueryRow(query, id)
+	row := m.DB.QueryRow(query, id)
 
 	err := row.Scan(
 		&v.ID,
@@ -91,7 +91,7 @@ func (m VipModel) InsertVip(v Vip) error {
 
 	var id int64
 
-	row := m.db.QueryRow(
+	row := m.DB.QueryRow(
 		query,
 		v.Name,
 		v.CountryOfOrigin,
@@ -115,7 +115,7 @@ func (m VipModel) UpdateVip(id int64, v Vip) (int64, error) {
 			SET name=$2, country_of_origin=$3, eta=$4, photo=$5, arrived=$6, attributes=$7
 			WHERE id=$1`
 
-	row, err := m.db.Exec(
+	row, err := m.DB.Exec(
 		q,
 		id,
 		v.Name,
@@ -141,7 +141,7 @@ func (m VipModel) UpdateVip(id int64, v Vip) (int64, error) {
 func (m VipModel) DeleteVip(id int64) (int64, error) {
 	sqlStatement := `DELETE FROM vips WHERE id=$1`
 
-	res, err := m.db.Exec(sqlStatement, id)
+	res, err := m.DB.Exec(sqlStatement, id)
 	if err != nil {
 		return 0, err
 	}
