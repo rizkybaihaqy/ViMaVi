@@ -6,17 +6,17 @@ import (
 )
 
 // Create postgres db connection using .env variable
-func CreateConnection(pgUrl string) *sql.DB {
+func CreateConnection(pgUrl string) (*sql.DB, error) {
 	db, err := sql.Open("postgres", pgUrl)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	err = db.Ping()
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	fmt.Println("DB connection successfully!")
-	return db
+	return db, nil
 }
