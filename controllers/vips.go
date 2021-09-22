@@ -94,11 +94,11 @@ func (c VipController) UpdateVip(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to execute the query. %v", err)
 	}
 	if row == 0 {
-		utils.WriteJSON(w, http.StatusCreated, nil, true, utils.NotFoundMessage)
+		utils.WriteJSON(w, http.StatusNotFound, nil, true, utils.NotFoundMessage)
 		return
 	}
 
-	utils.WriteJSON(w, http.StatusCreated, nil, true, utils.SuccessUpdateMessage)
+	utils.WriteJSON(w, http.StatusOK, nil, true, utils.SuccessUpdateMessage)
 }
 
 // Delete one vip
@@ -115,11 +115,11 @@ func (c VipController) DeleteVip(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to execute the query. %v", err)
 	}
 	if row == 0 {
-		utils.WriteJSON(w, http.StatusCreated, nil, true, utils.NotFoundMessage)
+		utils.WriteJSON(w, http.StatusNotFound, nil, true, utils.NotFoundMessage)
 		return
 	}
 
-	utils.WriteJSON(w, http.StatusCreated, nil, true, utils.SuccessUpdateMessage)
+	utils.WriteJSON(w, http.StatusOK, nil, true, utils.SuccessDeleteMessage)
 }
 
 // Update one vip arrived status to true from put request
