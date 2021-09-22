@@ -6,15 +6,23 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	m "vip-management-system-api/models"
+	"vip-management-system-api/models"
 	"vip-management-system-api/utils"
 
 	"github.com/gorilla/mux"
 )
 
+type VipController struct {
+	vModel *models.VipModel
+}
+
+func NewVipController(vModel *models.VipModel) *VipController {
+	return &VipController{vModel: vModel}
+}
+
 // Get all vips
-func GetVips(w http.ResponseWriter, r *http.Request) {
-	v, err := m.GetVips()
+func (c VipController) GetVips(w http.ResponseWriter, r *http.Request) {
+	v, err := c.vModel.GetVips()
 	if v == nil {
 		utils.WriteJSON(w, http.StatusNotFound, nil, true, utils.NotFoundMessage)
 		return
@@ -27,7 +35,7 @@ func GetVips(w http.ResponseWriter, r *http.Request) {
 }
 
 // Get one vip by id.
-func GetVip(w http.ResponseWriter, r *http.Request) {
+func (c VipController) GetVip(w http.ResponseWriter, r *http.Request) {
 	p := mux.Vars(r)
 
 	id, err := strconv.Atoi(p["id"])
@@ -35,7 +43,7 @@ func GetVip(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to convert the string into int.  %v", err)
 	}
 
-	v, err := m.GetVip(int64(id))
+	v, err := c.vModel.GetVip(int64(id))
 	if err == sql.ErrNoRows {
 		utils.WriteJSON(w, http.StatusNotFound, nil, true, utils.NotFoundMessage)
 		return
@@ -48,15 +56,15 @@ func GetVip(w http.ResponseWriter, r *http.Request) {
 }
 
 // Create one vip from post request
-func CreateVip(w http.ResponseWriter, r *http.Request) {
-	var v m.Vip
+func (c VipController) CreateVip(w http.ResponseWriter, r *http.Request) {
+	var v models.Vip
 
 	err := json.NewDecoder(r.Body).Decode(&v)
 	if err != nil {
 		log.Fatalf("Unable to decode the request body.  %v", err)
 	}
 
-	err = m.InsertVip(v)
+	err = c.vModel.InsertVip(v)
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v", err)
 	}
@@ -65,7 +73,7 @@ func CreateVip(w http.ResponseWriter, r *http.Request) {
 }
 
 // Update one vip from post request
-func UpdateVip(w http.ResponseWriter, r *http.Request) {
+func (c VipController) UpdateVip(w http.ResponseWriter, r *http.Request) {
 	p := mux.Vars(r)
 
 	id, err := strconv.Atoi(p["id"])
@@ -73,14 +81,14 @@ func UpdateVip(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to convert the string into int.  %v", err)
 	}
 
-	var v m.Vip
+	var v models.Vip
 
 	err = json.NewDecoder(r.Body).Decode(&v)
 	if err != nil {
 		log.Fatalf("Unable to decode the request body.  %v", err)
 	}
 
-	row, err := m.UpdateVip(int64(id), v)
+	row, err := c.vModel.UpdateVip(int64(id), v)
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v", err)
 	}
@@ -93,7 +101,7 @@ func UpdateVip(w http.ResponseWriter, r *http.Request) {
 }
 
 // Delete one vip
-func DeleteVip(w http.ResponseWriter, r *http.Request) {
+func (c VipController) DeleteVip(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 
 	id, err := strconv.Atoi(params["id"])
@@ -101,7 +109,7 @@ func DeleteVip(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("Unable to convert the string into int.  %v", err)
 	}
 
-	row, err := m.DeleteVip(int64(id))
+	row, err := c.vModel.DeleteVip(int64(id))
 	if err != nil {
 		log.Fatalf("Unable to execute the query. %v", err)
 	}

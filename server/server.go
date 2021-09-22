@@ -6,6 +6,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"vip-management-system-api/controllers"
+	"vip-management-system-api/models"
 	"vip-management-system-api/routers"
 
 	"github.com/gorilla/handlers"
@@ -22,12 +25,16 @@ func NewServer(db *sql.DB) *Server {
 }
 
 func (s *Server) Run() error {
+	vModel := models.NewVipModel(s.db)
+	vController := controllers.NewVipController(vModel)
+	vRoutes := routers.NewVipRoutes(vController)
+
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatalf("Error loading .env file")
 	}
 
-	r := routers.Router()
+	r := vRoutes.Router()
 	h := handlers.AllowedHeaders([]string{"Content-Type"})
 	m := handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE"})
 	o := handlers.AllowedOrigins([]string{"*"})
